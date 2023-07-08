@@ -1,13 +1,64 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>The Prince and the Knight</title>
+	<title>The Bishop and the Knight</title>
 	<link rel="stylesheet" type="text/css" href="index.css">
 	<script type="text/javascript" src="chess-pieces.js"></script>
+	<script type="text/javascript" src="bishop-and-knight.js"></script>
 </head>
 <body>
-<div id="main">
-</div>
-<script type="text/javascript" src="bishop-and-knight.js"></script>
+<div id="main"></div>
+<div id="alertOverlay"></div>
+<script type="text/javascript">
+	function setupLevel1() {
+		const BOARDSIZE_ROWS = 8;
+		const BOARDSIZE_COLUMNS = 32;
+		const BOARD_TERRAIN_AS_NUMBERS = [
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
+		];
+		const BOARD_TERRAIN = BOARD_TERRAIN_AS_NUMBERS.map((row) => {
+			return row.map((cell) => {
+				if(cell === 0)
+					return TerrainTypes.Empty;
+				else
+					return TerrainTypes.Impassable;
+			});
+		});
+
+
+		mainBoard = new Board(BOARDSIZE_ROWS, BOARDSIZE_COLUMNS, BOARD_TERRAIN, 'maintable', tileClickHandler);
+		mainBoard.addDomToParent('main');
+
+		tempPiece = new Piece('img/Marcius.png', Alignment.Player, MovementTypes.Bishop);
+		mainBoard.addPiece(tempPiece, 5, 6);
+		tempPiece2 = new Piece('img/Latisha.png', Alignment.Player, MovementTypes.Knight);
+		mainBoard.addPiece(tempPiece2, 5, 9);
+
+
+		tempPiece2 = new Piece('img/EnemyRobotRook.png', Alignment.Enemy, MovementTypes.Rook);
+		mainBoard.addPiece(tempPiece2, 5, 20);
+		tempPiece2 = new Piece('img/EnemyRobotRook.png', Alignment.Enemy, MovementTypes.Rook);
+		mainBoard.addPiece(tempPiece2, 5, 21);
+		tempPiece2 = new Piece('img/EnemyRobotRook.png', Alignment.Enemy, MovementTypes.Rook);
+		mainBoard.addPiece(tempPiece2, 5, 22);
+		tempPiece2 = new Piece('img/EnemyRobotRook.png', Alignment.Enemy, MovementTypes.Rook);
+		mainBoard.addPiece(tempPiece2, 5, 23);
+
+		mainBoard.updateDomToMatchState();
+
+		alertOverlayDom = document.getElementById('alertOverlay');
+		alertOverlayDom.innerText = 'Player Phase ▶';
+		alertOverlayDom.addEventListener('click', alertOverlayClickHandler);
+	}
+
+	setupLevel1();
+</script>
 </body>
 </html>
