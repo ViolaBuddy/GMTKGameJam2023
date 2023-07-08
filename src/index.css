@@ -1,0 +1,56 @@
+body {
+	background-color: #ffffff;
+	padding: 0px;
+	margin: 0px;
+}
+
+#main{
+	border: 2px solid green;
+	overflow-x: scroll;
+}
+
+table#maintable {
+	white-space: nowrap;
+	border-spacing: 0px;
+	border:2px solid black;
+	margin:1em;
+}
+
+table#maintable td {
+	cursor: default;
+	user-select: none;
+	position: relative;
+
+	padding: 0px;
+	margin: 0px;
+}
+
+table#maintable td .cell {
+	margin:0px;
+	width: 50px;
+	height: 50px;
+	aspect-ratio: 1 / 1 ;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+table#maintable td .cell img {
+	max-width: 45px;
+	max-height: 95px;
+}
+
+.lightcell {
+	background-color: #ffcc77;
+}
+.darkcell {
+	background-color: #552222;
+}
+
+.lightcell.selectable {
+	background-color: #77ccff;
+}
+.darkcell.selectable {
+	background-color: #222255;
+}
