@@ -85,7 +85,7 @@ class AlertOverlay extends GameObject {
 
 	show(message) {
 		this.domElement.style.display = 'flex';
-		this.domElement.innerText = message;
+		this.domElement.innerHTML = message;
 	}
 }
 
@@ -119,6 +119,7 @@ class Board extends GameObject {
 		this.selectedTileMoveable = [];
 		this.selectedTileAttackable = [];
 		this.gamePhase = GamePhase.PlayerPhaseBanner;
+		this.turnCounter = 1;
 
 		if (terrain === null) {
 			// empty board
@@ -165,7 +166,8 @@ class Board extends GameObject {
 
 				if (this.boardTerrain[r][c] === TerrainTypes.Impassable){
 					thisCellDiv.classList.add(CSS_IMPASSABLE);
-				} else if (this.boardTerrain[r][c] === TerrainTypes.Goal){
+				}
+				if (this.boardTerrain[r][c] === TerrainTypes.Goal){
 					thisCellDiv.classList.add(CSS_GOAL);
 				} else if ( (c%2) ^ (r%2) ) {
 					thisCellDiv.classList.add(CSS_DARKCELL);

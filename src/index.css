@@ -1,7 +1,12 @@
 body {
-	background-color: #ffffff;
+	background-color: #cccccc;
 	padding: 0px;
 	margin: 0px;
+}
+
+h1, h2 {
+	text-align: center;
+	font-variant: small-caps;
 }
 
 #alertOverlay {
@@ -9,6 +14,7 @@ body {
 	margin: 5px;
 	padding: 16px;
 	box-sizing: border-box;
+	text-align: center;
 
 	/*https://stackoverflow.com/questions/35990304/how-to-position-overlay-fixed-div-to-the-center-with-css*/
 	position:fixed;
@@ -18,8 +24,8 @@ body {
 	z-index: 10000;
 	border: 3px solid #743f39;
 
-	width:480px;
-	height:120px;
+	width:680px;
+	height:200px;
 	font-size:48px;
 	background-color: #ffeecc;
 	
@@ -32,15 +38,17 @@ body {
 }
 
 #main{
-	border: 2px solid green;
-	overflow-x: scroll;;
+	overflow-x: scroll;
+	width: 100%;
 }
 
 table#maintable {
+	background-color: #ffffff;
 	white-space: nowrap;
 	border-spacing: 0px;
 	border:2px solid black;
 	padding: 1em;
+	margin: 0 auto;
 }
 
 table#maintable td {
@@ -63,8 +71,8 @@ table#maintable td .cell {
 }
 
 table#maintable td .cell img {
-	max-width: 80px;
-	max-height: 160px;
+	max-width: 75px;
+	max-height: 150px;
 
 	/* align bottom of img with bottom of cell */
 	position: absolute;
@@ -88,17 +96,21 @@ table#maintable td .cell img {
 }
 
 .impassable {
-	background-color: #000000;
+	/*background-color: #000000;*/
+	background-image: url("img/Wall.png");
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center center;
 }
 .goal {
 	background-color: #88cc33;
-	background-image: url("img/star.png");
+	background-image: url("img/Star.png");
 	background-size: contain;
 	background-repeat: no-repeat;
 	background-position: center center;
 }
 .shieldedphysical {
-	background-image: url("img/shield.png");
+	background-image: url("img/Shield.png");
 	background-size: contain;
 	background-repeat: no-repeat;
 	background-position: center center;
@@ -110,14 +122,14 @@ table#maintable td .cell img {
 	background-color: #880000;
 }
 .shieldedmagical {
-	background-image: url("img/book.png");
+	background-image: url("img/Book.png");
 	background-size: contain;
 	background-repeat: no-repeat;
 	background-position: center center;
 }
-.lightcell.shieldedmagical {
+.lightcell.shieldedmagical:not(.selectable,.goal) {
 	background-color: #6666dd;
 }
-.darkcell.shieldedmagical {
+.darkcell.shieldedmagical:not(.selectable,.goal) {
 	background-color: #000088;
 }

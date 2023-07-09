@@ -1,25 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>The Bishop and the Knight</title>
+	<title>The Bishop and Knight's Escape</title>
 	<link rel="stylesheet" type="text/css" href="index.css">
 	<script type="text/javascript" src="chess-pieces.js"></script>
 	<script type="text/javascript" src="bishop-and-knight.js"></script>
 </head>
 <body>
+<h1>The Bishop and Knight's Escape</h1>
+<h2 id="levelName"></h2>
 <div id="main"></div>
 <div id="alertOverlay"></div>
 <script type="text/javascript">
+	function main() {
+		alertOverlay = new AlertOverlay(document.getElementById('alertOverlay'), null);
+		setupLevel1();
+	}
+
 	function setupLevel1() {
+		document.getElementById('levelName').innerText = 'Level 1';
+
 		const BOARD_TERRAIN_AS_NUMBERS = [
-		[0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,],
-		[0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,],
-		[0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,],
-		[0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,],
-		[0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,],
-		[0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1,],
-		[0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,2,],
-		[0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,],
+		[0,0,1,0,0,0,0,1,1,1,0,0,0,0,0,0,],
+		[0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,],
+		[1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,],
+		[0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,],
+		[1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,],
+		[0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,2,],
+		[0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,],
 		];
 		const BOARD_TERRAIN = BOARD_TERRAIN_AS_NUMBERS.map((row) => {
 			return row.map((cell) => {
@@ -36,42 +45,112 @@
 		const BOARDSIZE_ROWS = BOARD_TERRAIN_AS_NUMBERS.length;
 		const BOARDSIZE_COLUMNS = BOARD_TERRAIN_AS_NUMBERS[0].length;
 
-		alertOverlay = new AlertOverlay(document.getElementById('alertOverlay'), alertOverlayClickHandler);
-		alertOverlay.show('Player Phase ▶');
+		alertOverlay.setClickHandler(alertOverlayClickHandler);
+		alertOverlay.show('Player Phase<br>Turn 1');
 
 
 		mainBoard = new Board(BOARDSIZE_ROWS, BOARDSIZE_COLUMNS, BOARD_TERRAIN, 'maintable', tileClickHandler,
 			function() {
 				alertOverlay.setClickHandler(null);
-				alertOverlay.show('You Lose!');
+				alertOverlay.show('You Lose! Turn '+ mainBoard.turnCounter);
 			},
 			function() {
-				alertOverlay.setClickHandler(null);
-				alertOverlay.show('You Win!');
+				alertOverlay.setClickHandler(function(event) {
+					document.getElementById('main').innerHTML = '';
+					mainBoard = null;
+					setupLevel2();
+				});
+				alertOverlay.show('You Win! Turn '+ mainBoard.turnCounter + '<br>(Click for next level)');
 			});
 		mainBoard.addDomToParent('main');
 
-		var newPiece;
+		let newPiece;
 		newPiece = new Piece('img/Marcius.png', Alignment.Player, MovementTypes.Bishop, null, null);
-		mainBoard.addPiece(newPiece, 3, 4);
+		mainBoard.addPiece(newPiece, 1, 0);
 		newPiece = new Piece('img/Latisha.png', Alignment.Player, MovementTypes.Knight, null, WeaponType.Physical);
-		mainBoard.addPiece(newPiece, 6, 4);
+		mainBoard.addPiece(newPiece, 7, 0);
 
 		newPiece = new Piece('img/EnemyRobotRook_Physical.png', Alignment.Enemy, MovementTypes.Rook, WeaponType.Physical, null);
 		mainBoard.addPiece(newPiece, 3, 8);
 		newPiece = new Piece('img/EnemyRobotRook_Physical.png', Alignment.Enemy, MovementTypes.Rook, WeaponType.Physical, null);
-		mainBoard.addPiece(newPiece, 5, 20);
+		mainBoard.addPiece(newPiece, 5, 10);
 		newPiece = new Piece('img/EnemyRobotRook_Physical.png', Alignment.Enemy, MovementTypes.Rook, WeaponType.Physical, null);
-		mainBoard.addPiece(newPiece, 5, 21);
+		mainBoard.addPiece(newPiece, 5, 11);
 		newPiece = new Piece('img/EnemyRobotRook_Physical.png', Alignment.Enemy, MovementTypes.Rook, WeaponType.Physical, null);
-		mainBoard.addPiece(newPiece, 5, 22);
-		newPiece = new Piece('img/EnemyRobotRook_Physical.png', Alignment.Enemy, MovementTypes.Rook, WeaponType.Physical, null);
-		mainBoard.addPiece(newPiece, 5, 23);
+		mainBoard.addPiece(newPiece, 5, 12);
 
 		mainBoard.updateDomToMatchState();
 	}
 
-	setupLevel1();
+
+	function setupLevel2() {
+		document.getElementById('levelName').innerText = 'Level 2';
+
+		const BOARD_TERRAIN_AS_NUMBERS = [
+		[0,0,0,1,1,1,1,0,1,1,0,0,1,1,1,1,],
+		[0,0,0,1,1,1,0,0,0,1,0,0,0,0,1,1,],
+		[0,0,0,1,1,0,1,0,0,0,0,0,0,0,0,1,],
+		[0,0,0,1,0,1,0,0,0,1,0,0,0,0,0,1,],
+		[0,0,0,0,1,0,1,0,0,1,0,0,0,0,1,2,],
+		[0,0,0,1,0,1,0,1,0,1,0,0,0,0,1,0,],
+		[0,0,0,1,0,1,0,1,0,1,0,0,0,0,0,0,],
+		[0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,],
+		];
+		const BOARD_TERRAIN = BOARD_TERRAIN_AS_NUMBERS.map((row) => {
+			return row.map((cell) => {
+				if(cell === 0)
+					return TerrainTypes.Empty;
+				else if(cell === 1)
+					return TerrainTypes.Impassable;
+				else if(cell === 2)
+					return TerrainTypes.Goal;
+				else
+					console.error('Terrain Type not recognized when generating level1');
+			});
+		});
+		const BOARDSIZE_ROWS = BOARD_TERRAIN_AS_NUMBERS.length;
+		const BOARDSIZE_COLUMNS = BOARD_TERRAIN_AS_NUMBERS[0].length;
+
+		alertOverlay.setClickHandler(alertOverlayClickHandler);
+		alertOverlay.show('Player Phase<br>Turn 1');
+
+		mainBoard = new Board(BOARDSIZE_ROWS, BOARDSIZE_COLUMNS, BOARD_TERRAIN, 'maintable', tileClickHandler,
+			function() {
+				alertOverlay.setClickHandler(null);
+				alertOverlay.show('You Lose!<br>Turn '+ mainBoard.turnCounter);
+			},
+			function() {
+				alertOverlay.setClickHandler(null);
+				alertOverlay.show('You Win! Turn '+ mainBoard.turnCounter + '<br>(This was the last level)');
+			});
+		mainBoard.addDomToParent('main');
+
+		let newPiece;
+		newPiece = new Piece('img/Marcius.png', Alignment.Player, MovementTypes.Bishop, null, WeaponType.Magical);
+		mainBoard.addPiece(newPiece, 1, 0);
+		newPiece = new Piece('img/Latisha.png', Alignment.Player, MovementTypes.Knight, null, null);
+		mainBoard.addPiece(newPiece, 5, 0);
+
+		newPiece = new Piece('img/EnemyRobotRook_Magical.png', Alignment.Enemy, MovementTypes.Rook, WeaponType.Magical, null);
+		mainBoard.addPiece(newPiece, 3, 6);
+		newPiece = new Piece('img/EnemyRobotRook_Magical.png', Alignment.Enemy, MovementTypes.Rook, WeaponType.Magical, null);
+		mainBoard.addPiece(newPiece, 3, 8);
+		newPiece = new Piece('img/EnemyRobotRook_Magical.png', Alignment.Enemy, MovementTypes.Rook, WeaponType.Magical, null);
+
+		mainBoard.addPiece(newPiece, 7, 5);
+		newPiece = new Piece('img/EnemyRobotRook_Magical.png', Alignment.Enemy, MovementTypes.Rook, WeaponType.Magical, null);
+		mainBoard.addPiece(newPiece, 7, 7);
+		newPiece = new Piece('img/EnemyRobotRook_Magical.png', Alignment.Enemy, MovementTypes.Rook, WeaponType.Magical, null);
+
+		mainBoard.addPiece(newPiece, 5, 11);
+		newPiece = new Piece('img/EnemyRobotRook_Magical.png', Alignment.Enemy, MovementTypes.Rook, WeaponType.Magical, null);
+		mainBoard.addPiece(newPiece, 5, 13);
+		newPiece = new Piece('img/EnemyRobotRook_Magical.png', Alignment.Enemy, MovementTypes.Rook, WeaponType.Magical, null);
+
+		mainBoard.updateDomToMatchState();
+	}
+
+	main();
 </script>
 </body>
 </html>

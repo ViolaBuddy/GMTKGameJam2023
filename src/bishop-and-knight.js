@@ -37,7 +37,8 @@ async function runEnemyPhase() {
 
 	mainBoard.resetAlreadyMovedOfThisAlignment(Alignment.Enemy);
 	mainBoard.gamePhase = GamePhase.PlayerPhaseBanner;
-	alertOverlay.show('Player Phase ▶');
+	mainBoard.turnCounter += 1;
+	alertOverlay.show('Player Phase<br>Turn ' + mainBoard.turnCounter);
 
 	mainBoard.updateDomToMatchState();
 }
@@ -81,7 +82,7 @@ function tileFinishUnitAnimationHandler(r, c) {
 	if (mainBoard.allUnitsMovedOfThisAlignment(Alignment.Player)) {
 		mainBoard.resetAlreadyMovedOfThisAlignment(Alignment.Player);
 		mainBoard.gamePhase = GamePhase.EnemyPhaseBanner;
-		alertOverlay.show('Enemy Phase ▶');
+		alertOverlay.show('Enemy Phase<br>Turn ' + mainBoard.turnCounter);
 
 		mainBoard.updateDomToMatchState();
 	} else {
