@@ -89,6 +89,35 @@ class AlertOverlay extends GameObject {
 	}
 }
 
+class CutsceneOverlay extends GameObject {
+	constructor(domElement, onClickHandler = null) {
+		super()
+		this.domElement = domElement;
+		this.onClickHandler = null;
+		this.setClickHandler(onClickHandler);
+	}
+
+	setClickHandler(onClickHandler) {
+		if (this.onClickHandler !== null) {
+			this.domElement.removeEventListener('click', this.onClickHandler);
+		}
+		this.onClickHandler = onClickHandler;
+		if (onClickHandler !== null) {
+			this.domElement.addEventListener('click', onClickHandler);
+		}
+	}
+
+	hide() {
+		this.domElement.style.display = 'none';
+	}
+
+	show(message) {
+		 // this is the only difference between this and AlertOverlay
+		this.domElement.style.display = 'block';
+		document.getElementById('cutsceneOverlayText').innerHTML = message;
+	}
+}
+
 class Piece extends GameObject {
 	constructor(imgPath, alignment, movementType, attackType=null, defenseType=null) {
 		super()

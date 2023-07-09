@@ -11,10 +11,48 @@
 <h2 id="levelName"></h2>
 <div id="main"></div>
 <div id="alertOverlay"></div>
+<div id="cutsceneOverlay">
+	<div id="marcius"><img src="img/Marcius.png"></div>
+	<div id="latisha"><img src="img/Latisha.png"></div>
+	<br class="clear">
+	<div id="cutsceneOverlayText"></div>
+</div>
 <script type="text/javascript">
 	function main() {
 		alertOverlay = new AlertOverlay(document.getElementById('alertOverlay'), null);
-		setupLevel1();
+		cutsceneOverlay = new CutsceneOverlay(document.getElementById('cutsceneOverlay'), null);
+		setupCutscene1();
+	}
+
+	function setupCutscene1() {
+		cutsceneOverlay.setClickHandler(runCutscene1);
+		runCutscene1();
+	}
+	function runCutscene1(event) {
+		const allText = 
+		[
+		'MARCIUS: Oh, Latisha. You got captured by King Æthelbald too. Ha, and you\'re supposed to be this great Knight captain.▼',
+		'LATISHA: Yeah, yeah, as though you weren\'t captured long before me, mister Bishop boy. But these jail cell walls are flimsy. We can easily get out of them. Why haven\'t you escaped?▼',
+		'MARCIUS: There are also armed guards out there. Mindless Rook robots wandering randomly, but they\'ll attack us immediately if they get a chance.▼',
+		'LATISHA: Guards armed with Swords? Pah. They didn\'t take away my Shield; they can\'t injure me.▼',
+		'LATISHA: In fact, they can\'t even pass through any square near me. So I can protect you, too if you stay close to or behind me.▼',
+		'MARCIUS: Well, all right then, let\'s try this. Let\'s try to both get to the green tile over there to escape.⬤',
+		]
+
+		// "static" variable: https://stackoverflow.com/a/1535650
+		if ( typeof runCutscene1.counter == 'undefined' ) {
+			runCutscene1.counter = 0;
+		}
+
+		if (runCutscene1.counter < allText.length) {
+			cutsceneOverlay.show(allText[runCutscene1.counter]);
+			runCutscene1.counter++;
+		} else {
+			cutsceneOverlay.hide();
+			cutsceneOverlay.setClickHandler(null);
+			setupLevel1();
+			runCutscene1.counter = 0;
+		}
 	}
 
 	function setupLevel1() {
@@ -58,7 +96,7 @@
 				alertOverlay.setClickHandler(function(event) {
 					document.getElementById('main').innerHTML = '';
 					mainBoard = null;
-					setupLevel2();
+					setupCutscene2();
 				});
 				alertOverlay.show('You Win! Turn '+ mainBoard.turnCounter + '<br>(Click for next level)');
 			});
@@ -82,6 +120,37 @@
 		mainBoard.updateDomToMatchState();
 	}
 
+
+	function setupCutscene2() {
+		cutsceneOverlay.setClickHandler(runCutscene2);
+		runCutscene2();
+	}
+	function runCutscene2(event) {
+		const allText = 
+		[
+		'MARCIUS: We did it! Thanks, Latisha. On to the next room!▼',
+		'LATISHA: Yeah! &hellip;Wait, oh no, those guards in this next room have magic wands. My Shield is useless against them.▼',
+		'MARCIUS: Oh ha, what\'s that, it just takes someone waving little shiny stick to stop you? Pshaw.▼',
+		'MARCIUS: Look here at this Holy Book that I have. It emits an aura such that no one with a magic wand can get close.▼',
+		'MARCIUS: Looks like the tables have turned, Latisha. Looks like I\'ll be doing the protecting this time, and you can go cower behind me.▼',
+		'LATISHA: *Grumble* Fine, let\'s do this.⬤',
+		]
+
+		// "static" variable: https://stackoverflow.com/a/1535650
+		if ( typeof runCutscene2.counter == 'undefined' ) {
+			runCutscene2.counter = 0;
+		}
+
+		if (runCutscene2.counter < allText.length) {
+			cutsceneOverlay.show(allText[runCutscene2.counter]);
+			runCutscene2.counter++;
+		} else {
+			cutsceneOverlay.hide();
+			cutsceneOverlay.setClickHandler(null);
+			setupLevel2();
+			runCutscene2.counter = 0;
+		}
+	}
 
 	function setupLevel2() {
 		document.getElementById('levelName').innerText = 'Level 2';
@@ -117,11 +186,15 @@
 		mainBoard = new Board(BOARDSIZE_ROWS, BOARDSIZE_COLUMNS, BOARD_TERRAIN, 'maintable', tileClickHandler,
 			function() {
 				alertOverlay.setClickHandler(null);
-				alertOverlay.show('You Lose!<br>Turn '+ mainBoard.turnCounter);
+				alertOverlay.show('You Lose! Turn '+ mainBoard.turnCounter);
 			},
 			function() {
-				alertOverlay.setClickHandler(null);
-				alertOverlay.show('You Win! Turn '+ mainBoard.turnCounter + '<br>(This was the last level)');
+				alertOverlay.setClickHandler(function(event) {
+					document.getElementById('main').innerHTML = '';
+					mainBoard = null;
+					setupCutscene3();
+				});
+				alertOverlay.show('You Win! Turn '+ mainBoard.turnCounter + '<br>(Click for final cutscene)');
 			});
 		mainBoard.addDomToParent('main');
 
@@ -148,6 +221,34 @@
 		newPiece = new Piece('img/EnemyRobotRook_Magical.png', Alignment.Enemy, MovementTypes.Rook, WeaponType.Magical, null);
 
 		mainBoard.updateDomToMatchState();
+	}
+
+
+	function setupCutscene3() {
+		cutsceneOverlay.setClickHandler(runCutscene3);
+		runCutscene3();
+	}
+	function runCutscene3(event) {
+		const allText = 
+		[
+		'MARCIUS: We did it! We escaped!▼',
+		'LATISHA: High five! All right, I suppose it was worth it to be "protected" by a frail little clergyman instead of the other way around for once.▼',
+		'LATISHA: All right, come on Marcius, let\'s report back to our own King.▼',
+		'YOU WIN'
+		]
+
+		// "static" variable: https://stackoverflow.com/a/1535650
+		if ( typeof runCutscene3.counter == 'undefined' ) {
+			runCutscene3.counter = 0;
+		}
+
+		if (runCutscene3.counter < allText.length) {
+			cutsceneOverlay.show(allText[runCutscene3.counter]);
+			runCutscene3.counter++;
+		}/* else {
+			cutsceneOverlay.setClickHandler(null);
+			runCutscene3.counter = 0;
+		}*/
 	}
 
 	main();

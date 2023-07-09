@@ -2,6 +2,7 @@
 
 var mainBoard;
 var alertOverlay;
+var cutsceneOverlay;
 
 const TIME_BETWEEN_ENEMY_ANIMATIONS = 250;
 
