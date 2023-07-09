@@ -1,16 +1,16 @@
 "use strict";
 
 var mainBoard;
-var alertOverlayDom;
+var alertOverlay;
 
 const TIME_BETWEEN_ENEMY_ANIMATIONS = 250;
 
-// for debugging, make these accessible to the console
-var tempPiece;
-var tempPiece2;
-
-function EnemyAIChooseTarget() {
-	// TODO: do something significantly more intelligent than random from moveable squares
+function enemyAIChooseTarget() {
+	if (mainBoard.selectedTileAttackable.length > 0) {
+		// if you can attack anything, do it
+		return mainBoard.selectedTileAttackable[0];
+	}
+	// otherwise, just move randomly
 	return mainBoard.selectedTileMoveable[Math.floor(Math.random()*mainBoard.selectedTileMoveable.length)];
 }
 
@@ -19,7 +19,7 @@ async function runEnemyPhase() {
 
 	for (let currentTile of allEnemyTiles) {
 		mainBoard.setSelectedTile(currentTile[0], currentTile[1]);
-		let chosenTargetTile = EnemyAIChooseTarget();
+		let chosenTargetTile = enemyAIChooseTarget();
 		mainBoard.unsetSelectedTile();
 
 		let waitForAnimationPromise = new Promise( (resolve) => {
@@ -37,8 +37,7 @@ async function runEnemyPhase() {
 
 	mainBoard.resetAlreadyMovedOfThisAlignment(Alignment.Enemy);
 	mainBoard.gamePhase = GamePhase.PlayerPhaseBanner;
-	alertOverlayDom.innerText = 'Player Phase ▶';
-	alertOverlayDom.style.display = 'flex';
+	alertOverlay.show('Player Phase ▶');
 
 	mainBoard.updateDomToMatchState();
 }
@@ -47,13 +46,13 @@ function alertOverlayClickHandler(event) {
 	switch (mainBoard.gamePhase) {
 	case GamePhase.PlayerPhaseBanner:
 	{
-		alertOverlayDom.style.display = 'none';
+		alertOverlay.hide();
 		mainBoard.gamePhase = GamePhase.PlayerTurn;
 		break;
 	}
 	case GamePhase.EnemyPhaseBanner:
 	{
-		alertOverlayDom.style.display = 'none';
+		alertOverlay.hide();
 		mainBoard.gamePhase = GamePhase.EnemyTurn;
 		runEnemyPhase(); // an async function so it immediately returns
 		break;
@@ -68,11 +67,21 @@ function alertOverlayClickHandler(event) {
 function tileFinishUnitAnimationHandler(r, c) {
 	mainBoard.boardPieces[r][c].alreadyMoved = true;
 
+	if (mainBoard.boardTerrain[r][c] === TerrainTypes.Goal) {
+		let tdDom = mainBoard.domElement.children[r].children[c].firstChild;
+		tdDom.removeChild(mainBoard.boardPieces[r][c].domElement);
+		mainBoard.removePieceAt(r, c);
+		if(mainBoard.checkVictory())
+		{
+			mainBoard.updateDomToMatchState();
+			return;
+		}
+	}
+
 	if (mainBoard.allUnitsMovedOfThisAlignment(Alignment.Player)) {
 		mainBoard.resetAlreadyMovedOfThisAlignment(Alignment.Player);
 		mainBoard.gamePhase = GamePhase.EnemyPhaseBanner;
-		alertOverlayDom.innerText = 'Enemy Phase ▶';
-		alertOverlayDom.style.display = 'flex';
+		alertOverlay.show('Enemy Phase ▶');
 
 		mainBoard.updateDomToMatchState();
 	} else {
@@ -94,16 +103,10 @@ function tileClickHandlerPlayerTurn(r, c) {
 
 function tileClickHandlerUnitSelected(r, c) {
 	if (mainBoard.selectedTileMoveableContains(r, c)) {
-		if (mainBoard.boardPieces[r][c]) {
-			console.assert(mainBoard.boardPieces[r][c].alignment === Alignment.Enemy);
-			// TODO: attack
-			console.error('NOT IMPLEMENTED: ATTACKING');
-		} else {
-			mainBoard.gamePhase = GamePhase.UnitAnimation;
-			let selectedPiece = mainBoard.boardPieces[mainBoard.selectedTile[0]][mainBoard.selectedTile[1]];
-			mainBoard.movePiece(selectedPiece, r, c, tileFinishUnitAnimationHandler);
-			mainBoard.unsetSelectedTile();
-		}
+		mainBoard.gamePhase = GamePhase.UnitAnimation;
+		let selectedPiece = mainBoard.boardPieces[mainBoard.selectedTile[0]][mainBoard.selectedTile[1]];
+		mainBoard.movePiece(selectedPiece, r, c, tileFinishUnitAnimationHandler);
+		mainBoard.unsetSelectedTile();
 	} else {
 		// an empty or otherwise unselectable tile: go back
 		mainBoard.gamePhase = GamePhase.PlayerTurn;

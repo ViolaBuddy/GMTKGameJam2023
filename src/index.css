@@ -40,7 +40,6 @@ table#maintable {
 	white-space: nowrap;
 	border-spacing: 0px;
 	border:2px solid black;
-	margin:1em;
 	padding: 1em;
 }
 
@@ -79,10 +78,10 @@ table#maintable td .cell img {
 	background-color: #552222;
 }
 .lightcell.selectable {
-	background-color: #77ccff;
+	background-color: #aaaaaa;
 }
 .darkcell.selectable {
-	background-color: #222255;
+	background-color: #777777;
 }
 .alreadymoved {
 	filter: contrast(0.2);
@@ -90,4 +89,35 @@ table#maintable td .cell img {
 
 .impassable {
 	background-color: #000000;
+}
+.goal {
+	background-color: #88cc33;
+	background-image: url("img/star.png");
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+.shieldedphysical {
+	background-image: url("img/shield.png");
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+.lightcell.shieldedphysical {
+	background-color: #dd6666;
+}
+.darkcell.shieldedphysical {
+	background-color: #880000;
+}
+.shieldedmagical {
+	background-image: url("img/book.png");
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+.lightcell.shieldedmagical {
+	background-color: #6666dd;
+}
+.darkcell.shieldedmagical {
+	background-color: #000088;
 }
